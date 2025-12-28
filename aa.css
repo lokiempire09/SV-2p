@@ -1,0 +1,184 @@
+
+ /* --- SelectionWay - A Journey Towards Success --- */
+ /* --- Font and Base --- */
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #7994c4;
+    /* Naya, halka-neela background */
+}
+
+/* --- Naye Page Transition Animations --- */
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideOutToLeft {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    to {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.page {
+    display: none;
+    /* Sab pages default mein chhupe honge */
+    animation: fadeIn 0.4s ease-out;
+}
+
+.page.active {
+    display: block;
+}
+
+/* JavaScript se page transition control karne ke liye class */
+.page-enter {
+    animation: slideInFromRight 0.4s ease-out forwards;
+}
+
+.page-exit {
+    animation: slideOutToLeft 0.4s ease-out forwards;
+}
+
+/* --- Favorite Icon Style --- */
+.fav-icon.favorited svg {
+    fill: #ef4444;
+    /* Laal */
+    stroke: #ef4444;
+}
+
+/* --- Scrollbar Styling --- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #cdd3bd;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #a8b5c1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #8e9ca9;
+}
+
+/* --- Splash Screen Animation --- */
+@keyframes web-load {
+    0% {
+        width: 0%;
+    }
+
+    100% {
+        width: 100%;
+    }
+}
+
+.loading-bar {
+    animation: web-load 1.5s ease-out forwards;
+}
+    
+    /* Adjusted Slider CSS */
+    .slider-container {
+        position: relative;
+        width: 100%;
+        height: 250px; /* Adjust height if needed */
+        overflow: hidden;
+        margin-bottom: 20px;
+        margin-top: 20px;
+    }
+
+    .slide {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        transition: opacity 0.5s ease-in-out;
+        display: flex;
+        justify-content: center; /* Centers the image horizontally */
+        align-items: center;
+    }
+
+    .slide.active {
+        opacity: 1;
+        z-index: 1;
+    }
+
+    .slide img {
+        width: 100%; /* Keeps your card-look */
+        height: 100%;
+        object-fit: cover;
+        border-radius: 15px;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        filter: brightness(0.8); /* Slightly darkens image so text pops */
+    }
+
+    /* FIX: Absolute position to overlay text on image */
+    .slide-content {
+        position: absolute;
+        top: 50%;
+        left: 44%;
+        transform: translate(-50%, -50%);
+        z-index: 10;
+        width: 80%;
+    }
+
+    .slide-content h2 {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        margin-bottom: 5px;
+    }
+
+    .slide-content p {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+    .hero-btn {
+        padding: 10px 24px;
+        font-size: 0.95rem;
+        border: none;
+        border-radius: 99px;
+        background: #fbbf24;
+        color: black;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .hero-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px rgba(251, 191, 36, 0.6);
+        }
