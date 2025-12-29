@@ -1,5 +1,5 @@
 // Configuration
-const YOUTUBE_TUTORIAL_LINK = "https://youtube.com";
+const YOUTUBE_TUTORIAL_LINK = "https://youtu.be/zaXXsBMsvck?si=S45kEVzye85_uZyQ";
 const ACCESS_DURATION = 24; // Hours
 
 // DOM Elements
