@@ -1,246 +1,427 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Your Website</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selection Way</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* SHORTLINK OVERLAY STYLES */
-        #shortlinkOverlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            z-index: 9999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            color: white;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
-        
-        .shortlink-box {
-            background: #1a1a2e;
-            padding: 40px;
-            border-radius: 20px;
-            text-align: center;
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
             max-width: 500px;
-            width: 90%;
-            border: 2px solid #4cc9f0;
-            box-shadow: 0 0 50px rgba(76, 201, 240, 0.3);
+            margin: 0 auto;
         }
-        
-        .shortlink-btn {
-            display: inline-block;
-            background: #28a745;
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 20px;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(90deg, #60a5fa, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #475569, transparent);
+            margin: 25px 0;
+        }
+
+        /* Auth Key Input Section */
+        .section-title {
+            font-size: 14px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .auth-input-box {
+            background: rgba(30, 41, 59, 0.7);
+            border: 1px solid #475569;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 20px;
+        }
+
+        #authKeyInput {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: #f8fafc;
+            font-size: 18px;
+            padding: 10px 0;
+            outline: none;
+        }
+
+        #authKeyInput::placeholder {
+            color: #64748b;
+            font-style: italic;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-verify {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
             color: white;
-            padding: 18px 40px;
+        }
+
+        .btn-generate {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Info Sections */
+        .info-section {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            border-left: 4px solid #8b5cf6;
+        }
+
+        .info-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #f8fafc;
+        }
+
+        .info-content {
+            color: #cbd5e1;
+            font-size: 15px;
+        }
+
+        /* Instructions */
+        .instructions {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+        }
+
+        .instructions ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+
+        .instructions li {
+            margin-bottom: 12px;
+            color: #cbd5e1;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #94a3b8;
+            font-style: italic;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #334155;
+        }
+
+        /* Task Section */
+        .task-section {
+            background: rgba(30, 41, 59, 0.7);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            display: none;
+        }
+
+        .task-item {
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 10px;
+            padding: 18px;
+            margin-bottom: 15px;
+            border: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .task-info h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+            color: #f8fafc;
+        }
+
+        .task-info p {
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .task-btn {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .task-btn:hover {
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        }
+
+        .task-status {
+            color: #10b981;
+            font-weight: 600;
+            font-size: 14px;
+            display: none;
+        }
+
+        /* Generated Key Display */
+        .key-display {
+            background: linear-gradient(135deg, rgba(21, 128, 61, 0.2), rgba(5, 150, 105, 0.2));
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            display: none;
+        }
+
+        .key-value {
+            font-family: 'Courier New', monospace;
             font-size: 20px;
             font-weight: bold;
-            text-decoration: none;
-            border-radius: 50px;
-            margin: 25px 0;
-            transition: all 0.3s;
+            letter-spacing: 1px;
+            color: #10b981;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            word-break: break-all;
+            text-align: center;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            font-weight: 600;
             cursor: pointer;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
-        
-        .shortlink-btn:hover {
-            background: #218838;
-            transform: scale(1.05);
-        }
-        
-        .loader {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid #28a745;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+
+        /* Messages */
+        .message {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
             display: none;
+            align-items: center;
+            gap: 10px;
         }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+
+        .message-success {
+            background: rgba(21, 128, 61, 0.2);
+            border: 1px solid #10b981;
+            color: #10b981;
         }
-        
-        /* YOUR EXISTING WEBSITE STYLES (Rahiye jaise hai) */
-        body {
-            font-family: Arial, sans-serif;
-            /* ... aapke existing styles ... */
+
+        .message-error {
+            background: rgba(220, 38, 38, 0.2);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- ========================================== -->
-    <!-- SHORTLINK OVERLAY (YE PEHLE DIKHEGA) -->
-    <!-- ========================================== -->
-    <div id="shortlinkOverlay">
-        <div class="shortlink-box">
-            <h1>🔒 Access Required</h1>
-            <p>Complete one simple task to access this website</p>
-            
-            <div class="instructions">
-                <p><strong>Step 1:</strong> Click the green button below</p>
-                <p><strong>Step 2:</strong> Complete the shortlink (wait 5-10 seconds)</p>
-                <p><strong>Step 3:</strong> Return back here automatically</p>
-                <p><strong>Step 4:</strong> Full access granted! ✅</p>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Selection Way</h1>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Paste Auth Key -->
+        <div class="section-title">Paste Auth Key here ....</div>
+        <div class="auth-input-box">
+            <input type="text" id="authKeyInput" placeholder="Enter your authentication key...">
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Buttons -->
+        <div class="button-group">
+            <button class="btn btn-verify" id="verifyBtn">
+                <i class="fas fa-check-circle"></i> Verify Auth Key
+            </button>
+            <button class="btn btn-generate" id="generateBtn">
+                <i class="fas fa-key"></i> Generate Auth Key
+            </button>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- How to Get Auth Key -->
+        <div class="section-title">How to Get Auth Key....!</div>
+        <div class="info-section">
+            <div class="info-title">Self-Training AI</div>
+            <div class="info-content">
+                Explore self-training AI breakthroughs like AZR, the WebThinker autonomous research agent, and the latest advancements in artificial intelligence technology.
             </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <div class="info-title">How to Get Your Auth Key</div>
+            <ol>
+                <li>Tap on Generate Auth Key above</li>
+                <li>Complete the simple task(s)</li>
+                <li>Copy your Auth Key</li>
+                <li>Paste it above and tap Verify Auth Key</li>
+            </ol>
+            <div class="note">
+                <i class="fas fa-info-circle"></i> Note: Use the same device for all steps to ensure successful verification.
+            </div>
+        </div>
+
+        <!-- Task Section (Hidden Initially) -->
+        <div class="task-section" id="taskSection">
+            <div class="info-title">Complete These Simple Tasks</div>
             
-            <!-- YAHAN APNA SHORTLINK DALO -->
-            <a href="https://your-earning-shortlink.com" 
-               target="_blank" 
-               class="shortlink-btn" 
-               id="taskLink">
-               🔗 CLICK HERE TO CONTINUE
-            </a>
-            
-            <div class="loader" id="loadingSpinner"></div>
-            
-            <p id="statusText">Waiting for you to complete the task...</p>
-            
-            <p style="font-size: 14px; color: #aaa; margin-top: 20px;">
-                <i>This helps us maintain the website. Thank you!</i>
-            </p>
+            <!-- Task 1 -->
+            <div class="task-item" id="task1">
+                <div class="task-info">
+                    <h3>Watch Short Video</h3>
+                    <p>Click the button to watch a short video</p>
+                </div>
+                <button class="task-btn" onclick="completeTask(1)">Start Task</button>
+                <div class="task-status" id="task1Status"></div>
+            </div>
+
+            <!-- Task 2 -->
+            <div class="task-item" id="task2">
+                <div class="task-info">
+                    <h3>Visit Website</h3>
+                    <p>Visit our partner website</p>
+                </div>
+                <button class="task-btn" onclick="completeTask(2)">Start Task</button>
+                <div class="task-status" id="task2Status"></div>
+            </div>
+
+            <!-- Generate Key Button -->
+            <button class="btn btn-generate" id="generateKeyBtn" style="margin-top: 20px; display: none;">
+                <i class="fas fa-key"></i> Generate My Auth Key
+            </button>
+        </div>
+
+        <!-- Generated Key Display -->
+        <div class="key-display" id="keyDisplay">
+            <div class="info-title">Your Authentication Key</div>
+            <div class="key-value" id="generatedKeyValue"></div>
+            <button class="copy-btn" id="copyKeyBtn">
+                <i class="fas fa-copy"></i> Copy to Clipboard
+            </button>
+            <div class="note" style="margin-top: 15px;">
+                <i class="fas fa-exclamation-triangle"></i> Save this key! You'll need it to verify access.
+            </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="message message-success" id="successMessage">
+            <i class="fas fa-check-circle"></i>
+            <span id="successText"></span>
+        </div>
+
+        <div class="message message-error" id="errorMessage">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorText"></span>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Selection Way © 2024 | Secure Authentication System</p>
         </div>
     </div>
-    
-    <!-- ========================================== -->
-    <!-- AAPKI ORIGINAL WEBSITE CONTENT (YAHI CHUPA RAHEGA) -->
-    <!-- ========================================== -->
-    <div id="mainContent" style="display: none;">
-        <!-- YEH AAPKI PURANI WEBSITE HAI -->
-        <h1>Welcome to My Website! 🎉</h1>
-        <p>This is your actual website content...</p>
-        <!-- ... aapka existing content ... -->
-    </div>
 
-    <script>
-        // ================================
-        // CONFIGURATION - YAHAN LINKS DALO
-        // ================================
-        
-        // 1. APNA EARNING SHORTLINK YAHAN DALO
-        const SHORTLINK_URL = "https://arolinks.com/YDyd";
-        
-        // 2. APNI WEBSITE KA ASLI URL (jo verify ke baad dikhega)
-        // Jaise: https://yourusername.github.io ya https://your-site.vercel.app
-        const MAIN_SITE_URL = window.location.origin;
-        
-        // ================================
-        // MAIN LOGIC - CHANGE MAT KARO
-        // ================================
-        
-        // Set the shortlink
-        document.getElementById('taskLink').href = SHORTLINK_URL;
-        
-        // Check if user already completed task
-        function checkIfVerified() {
-            const verified = localStorage.getItem('siteVerified');
-            const expiry = localStorage.getItem('verificationExpiry');
-            
-            if (verified === 'true' && expiry && Date.now() < parseInt(expiry)) {
-                // User already verified (within 24 hours)
-                showMainContent();
-                return true;
-            }
-            return false;
-        }
-        
-        // Show main website content
-        function showMainContent() {
-            document.getElementById('shortlinkOverlay').style.display = 'none';
-            document.getElementById('mainContent').style.display = 'block';
-        }
-        
-        // Show shortlink overlay
-        function showShortlinkOverlay() {
-            document.getElementById('shortlinkOverlay').style.display = 'flex';
-            document.getElementById('mainContent').style.display = 'none';
-        }
-        
-        // When user clicks shortlink
-        document.getElementById('taskLink').addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            // Show loading spinner
-            document.getElementById('loadingSpinner').style.display = 'block';
-            document.getElementById('statusText').textContent = "Processing... Please wait";
-            
-            // Open shortlink in new tab
-            const newTab = window.open(SHORTLINK_URL, '_blank');
-            
-            // Start checking if user completed
-            startVerificationCheck(newTab);
-        });
-        
-        // Check if user completed shortlink
-        function startVerificationCheck(tab) {
-            let checkCount = 0;
-            const maxChecks = 30; // 30 seconds max
-            
-            const checkInterval = setInterval(function() {
-                checkCount++;
-                
-                // If tab is closed, assume user completed
-                if (tab.closed || checkCount >= maxChecks) {
-                    clearInterval(checkInterval);
-                    
-                    // Mark as verified (24 hours validity)
-                    localStorage.setItem('siteVerified', 'true');
-                    localStorage.setItem('verificationExpiry', Date.now() + (24 * 60 * 60 * 1000));
-                    localStorage.setItem('verifiedTime', new Date().toISOString());
-                    
-                    // Show success and main content
-                    document.getElementById('statusText').innerHTML = 
-                        "<span style='color: #4CAF50;'>✅ Verification Successful!</span>";
-                    
-                    setTimeout(function() {
-                        showMainContent();
-                        alert("🎉 Access Granted! Enjoy the website.");
-                    }, 1500);
-                } else {
-                    // Still waiting
-                    document.getElementById('statusText').textContent = 
-                        `Waiting... (${checkCount}/30 seconds)`;
-                }
-            }, 1000); // Check every second
-        }
-        
-        // Auto-click after 10 seconds if user doesn't click
-        setTimeout(function() {
-            if (document.getElementById('shortlinkOverlay').style.display === 'flex') {
-                // Auto-click the shortlink button
-                document.getElementById('taskLink').click();
-            }
-        }, 10000);
-        
-        // On page load
-        window.onload = function() {
-            // Check URL parameters (if coming back from shortlink)
-            const urlParams = new URLSearchParams(window.location.search);
-            if (urlParams.get('verified') === 'true') {
-                localStorage.setItem('siteVerified', 'true');
-                localStorage.setItem('verificationExpiry', Date.now() + (24 * 60 * 60 * 1000));
-                showMainContent();
-                return;
-            }
-            
-            // Check if already verified
-            if (!checkIfVerified()) {
-                // Show shortlink overlay (blocking screen)
-                showShortlinkOverlay();
-            } else {
-                // Show main content directly
-                showMainContent();
-            }
-        };
-    </script>
-    
-    <!-- AAPKE EXISTING SCRIPTS (Agar hain toh) -->
-    <script>
-        // Aapke purane scripts yahan rahenge
-        // ...
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
