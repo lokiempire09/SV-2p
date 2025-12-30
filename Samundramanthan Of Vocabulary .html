@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Premium Video & PDF Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- ✅ HLS PLAYER -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<!-- ✅ PDF.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<style>
+:root{
+  --bg:#040615;
+  --panel:#0c1230;
+  --card:#121a4d;
+  --accent:#4f8bff;
+  --text:#eef1ff;
+}
+*{box-sizing:border-box;font-family:system-ui}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#050716,#071035);
+  color:var(--text);
+}
+header{padding:16px;font-size:22px;font-weight:700}
+.tabs{display:flex;gap:10px;padding:10px}
+.tab{
+  padding:10px 18px;
+  border-radius:20px;
+  background:#12194a;
+  opacity:.6;
+  cursor:pointer;
+}
+.tab.active{background:var(--accent);opacity:1}
+.main{
+  display:grid;
+  grid-template-columns:340px 1fr;
+  height:calc(100vh - 120px);
+}
+.sidebar{
+  background:var(--panel);
+  padding:10px;
+  overflow:auto;
+}
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.play-btn{
+  background:var(--accent);
+  border:none;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:20px;
+  cursor:pointer;
+}
+.viewer{
+  padding:14px;
+  position:relative;
+}
+video{
+  width:100%;
+  height:72vh;
+  background:black;
+  border-radius:16px;
+}
+#quality{
+  position:absolute;
+  top:18px;
+  right:20px;
+  background:#000000aa;
+  color:white;
+  border-radius:8px;
+  padding:6px;
+}
+canvas{width:100%;border-radius:14px;background:#000}
+.pdf-controls{
+  display:flex;
+  gap:10px;
+  margin-bottom:8px;
+}
+button.ctrl{
+  background:#ffffff22;
+  border:none;
+  color:white;
+  padding:6px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body oncontextmenu="return false">
+
+<header>🎓 Premium Learning Panel</header>
+
+<div class="tabs">
+  <div class="tab active" id="videoTab">🎬 Videos</div>
+  <div class="tab" id="pdfTab">📄 PDFs</div>
+</div>
+
+<div class="main">
+  <div class="sidebar" id="list"></div>
+  <div class="viewer" id="viewer">Select content</div>
+</div>
+
+<script>
+// ✅ PASTE DATA (Title:URL)
+const RAW_DATA = `
+Vocab Test - 2:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/351526-1707472184/hls-a7913a/720p/master-2242743.1647952246.m3u8
+Vocab Test - 1:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/347807-1707127213/hls-59a456/720p/master-9296414.589046376.m3u8
+Root Words / Homonyms / SYnonyms - 41:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/345974-1706864679/hls-20302d/720p/master-388151.599623392.m3u8
+Root Words / Homonyms / SYnonyms - 40:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/344356-1706691336/hls-0110a2/720p/master-4913314.779073275.m3u8
+Root Words / Homonyms / SYnonyms - 39:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/343074-1706605119/hls-3ec87a/720p/master-750019.0484245151.m3u8
+Root Words / Homonyms / SYnonyms - 38:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/341331-1706519281/hls-a93902/720p/master-5329825.615241881.m3u8
+Root Words / Homonyms / SYnonyms - 37:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/335690-1706173264/hls-567fbd/720p/master-7970303.203160718.m3u8
+Root Words / Homonyms / SYnonyms - 36:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/334779-1706086504/hls-0c2d4e/720p/master-8688054.244554123.m3u8
+Vocab Test:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/332682-1705733813/hls-3d88da/720p/master-2387770.9414688563.m3u8
+Root Words / Homonyms / SYnonyms - 35:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/332268-1705654971/hls-56c4a8/720p/master-7070359.125646168.m3u8
+Root Words / Homonyms / SYnonyms - 34:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/331308-1705481785/hls-f5c362/720p/master-293182.34929679224.m3u8
+Root Words / Homonyms / SYnonyms - 33:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/330331-1705309162/hls-4250b3/720p/master-7906270.426226918.m3u8
+Root Words / Homonyms / SYnonyms - 32:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/329414-1705050166/hls-a87ad0/720p/master-9026726.459766902.m3u8
+Root Words / Homonyms / SYnonyms - 31:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/328115-1704877734/hls-8bd7d7/720p/master-2273247.846840898.m3u8
+Root Words / Homonyms / SYnonyms - 30:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/324537-1704290405/hls-fceab7/720p/master-8210096.783655423.m3u8
+Root Words / Homonyms / SYnonyms - 29:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/322978-1703840560/hls-c12758/720p/master-2016015.9720836536.m3u8
+Root Words / Homonyms / SYnonyms - 28:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/321996-1703667955/hls-061077/720p/master-2606573.9552182523.m3u8
+Root Words / Homonyms / SYnonyms - 27:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/320244-1703236061/hls/720p/master-9020283.527466.m3u8
+Root Words / Homonyms / SYnonyms - 26:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/319360-1703061834/hls/720p/master-7605452.257629568.m3u8
+Root Words / Homonyms / SYnonyms - 25:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/318425-1702890638/hls/720p/master-1710678.1468137754.m3u8
+Root Words / Homonyms / SYnonyms - 24:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/317532-1702630969/hls/720p/master-207246.55953393123.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 23:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/316603-1702480177/hls/720p/master-7068433.31978586.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 22:https://appx-recordings-mcdn.akamai.net.in/videos/uclive-data/314532-1702293210/hls/720p/master-7723857.31293018.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 21:https://appx-recordings-mcdn.akamai.net.in/videos/uclive-data/313386-1701851961/hls/720p/master-6044150.830132682.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 20:https://appx-recordings-mcdn.akamai.net.in/videos/uclive-data/428328-1701680878/hls/720p/master-7257778.677362723.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 19:https://appx-recordings-mcdn.akamai.net.in/videos/uclive-data/427376-1701421615/hls/720p/master-4129262.3768946244.m3u8.m3u8
+Vocab Test of root words:https://appx-recordings-mcdn.akamai.net.in/drm/1d7ab10e-e2ad-4a2d-ba75-d31890fbc660/720p/drm-hls/master-8304050.255907048.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 18:https://appx-recordings-mcdn.akamai.net.in/videos/uclive-data/424708-1700816571/hls/720p/master-7431234.316468281.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 17:https://appx-recordings-mcdn.akamai.net.in/drm/99d9c58a-d4f0-4c0b-8a02-41a15cc72468/720p/drm-hls/master-1899572.5103776627.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 16:https://appx-recordings-mcdn.akamai.net.in/drm/e505ef6f-8507-458b-93cd-ad2c1fbb7295/720p/drm-hls/master-7256916.0906658815.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 15:https://appx-recordings-mcdn.akamai.net.in/drm/e6057c67-04cf-4434-9923-12f35637137c/720p/drm-hls/master-5811508.111875163.m3u8.m3u8
+Root Words / Homonyms / SYnonyms - 14:https://appx-recordings-mcdn.akamai.net.in/drm/a3f97f45-d6e7-4528-b53c-48ad9f381ef3/720p/drm-hls/master-4996170.623336844.m3u8.m3u8
+Vocab Test:https://appx-recordings-mcdn.akamai.net.in/drm/dd638782-7b7a-4c18-bb16-b12bd10c4286/720p/drm-hls/master-1932270.383034993.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 13:https://appx-recordings-mcdn.akamai.net.in/drm/dadd503a-b205-4211-87b0-200a586f8116/720p/drm-hls/master-5161459.66276414.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 12:https://appx-recordings-mcdn.akamai.net.in/drm/fc32db4a-8833-4fee-82d1-37df21e21e36/720p/drm-hls/master-7962499.740261771.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 11:https://appx-recordings-mcdn.akamai.net.in/drm/41795d7a-a622-4681-ac38-dc934b4c54f3/720p/drm-hls/master-869214.1845960321.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 10:https://appx-recordings-mcdn.akamai.net.in/drm/c8074c9e-c0fc-4cb9-82e4-f31cf395932a/720p/drm-hls/master-7091222.959765993.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 9:https://appx-recordings-mcdn.akamai.net.in/drm/f2a05289-c09e-43b6-b546-c0003df14395/720p/drm-hls/master-8878678.334047483.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 8:https://appx-recordings-mcdn.akamai.net.in/drm/baa5aced-ac38-4b6e-8b36-eef335b3fff4/720p/drm-hls/master-8004643.803768363.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 7:https://appx-recordings-mcdn.akamai.net.in/drm/47dc10c3-8884-4e41-8c13-3ac6083d76f5/720p/drm-hls/master-915607.2895817325.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 6:https://appx-recordings-mcdn.akamai.net.in/drm/4f3bdd4d-6fcd-4016-ad8d-d5652575a31c/720p/drm-hls/master-2002353.7194628948.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 5:https://appx-recordings-mcdn.akamai.net.in/drm/0cd3cde3-843a-4418-b9f1-c0af16a33a8b/720p/drm-hls/master-311441.67471907515.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 4:https://appx-recordings-mcdn.akamai.net.in/drm/1c5a5f53-3eee-4f36-9eae-170e880048f5/720p/drm-hls/master-6599322.064430477.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 3:https://appx-recordings-mcdn.akamai.net.in/drm/ef7d8fd5-932c-4282-a6f5-b5f8192c7084/720p/drm-hls/master-6831710.241401685.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 2:https://appx-recordings-mcdn.akamai.net.in/drm/0576c5e4-6f6b-408e-bff1-59ba5102f671/720p/drm-hls/master-4989862.530815212.m3u8.m3u8
+Root Words / Homonyms / Synonyms - 1:https://appx-recordings-mcdn.akamai.net.in/drm/5ede4b50-cda9-4277-b861-74609cc4127e/720p/drm-hls/master-3369010.8627294446.m3u8.m3u8
+Samundramanthan Notes:https://appxcontent-mcdn.akamai.net.in/paid_course4/2024-06-14-0.476481797166485.pdf
+One Word Substitution Lesson:https://appxcontent-mcdn.akamai.net.in/subject/2024-08-08-0.8411583178825173.pdf
+ONE WORD SUBSTITUTION PRINTABLE:https://appxcontent.kaxa.in/subject/2024-09-17-0.7352405341581352.pdf
+confuse word:https://appxcontent-mcdn.akamai.net.in/subject/2023-12-20-0.9392256649729256.pdf
+Root Word:https://appxcontent-mcdn.akamai.net.in/subject/2023-12-20-0.5596415044831238.pdf
+Samundramanthan of vocab A4:https://appxcontent-mcdn.akamai.net.in/subject/2024-01-09-0.3088994637564386.pdf
+Synonyms Practice:https://appxcontent-mcdn.akamai.net.in/paid_course4/2024-01-22-0.13443657025054856.pdf
+Samundramanthan Class Pdf A4:https://appxcontent-mcdn.akamai.net.in/paid_course4/2024-02-06-0.07565233286987327.pdf
+Idioms & Phrases Updated on 26 April 2024:https://appxcontent-mcdn.akamai.net.in/subject/2024-04-26-0.30927449525199746.pdf
+Idioms Answer key:https://appxcontent-mcdn.akamai.net.in/paid_course4/2024-04-30-0.3263538350585833.pdf
+OMR:https://appxcontent-mcdn.akamai.net.in/paid_course4/2024-04-26-0.07240792088324333.pdf
+Idioms Full with Answer in Red:https://appxcontent-mcdn.akamai.net.in/subject/2024-05-06-0.7609450357737009.pdf
+Telegram Group for Paid Students:https://t.me/+cfOvzA7VeWk0Y2Jl
+Fixed Preposition -1:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/328807-1704960527/hls-d10424/720p/master-7054314.160235648.m3u8
+Fixed Preposition -2:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/328946-1704967910/hls-d9b37e/720p/master-795218.1128309221.m3u8
+Fixed Preposition:https://appxcontent-mcdn.akamai.net.in/paid_course4/2024-01-11-0.1252446175298405.pdf
+Correctly & Incorrectly Part - 1:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/344876-1706771441/hls-748c32/720p/master-6339721.245304888.m3u8
+Correctly & Incorrectly Part - 2:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/344903-1706774317/hls-46904b/720p/master-5725690.108343469.m3u8
+Spelling Error Updated 8 May:https://appxcontent-mcdn.akamai.net.in/subject/2024-05-21-0.8577149998206661.pdf
+Doubt Session - 1:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/363397-1709362851/hls-61ab7c/720p/master-3847441.3478519456.m3u8
+Doubt Session - 2:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/367292-1709967758/hls-73d64f/720p/master-5322425.965223812.m3u8
+Doubt Session - 3:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/680215-1711783334/hls-f1cc43/720p/master-7069673.414104816.m3u8
+4. Doubt Session - 4:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/701626-1712386330/hls-6f74f7/720p/master-493136.5165800017.m3u8
+Doubt Session - 5:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/721699-1712992036/hls-75c916/720p/master-2067866.647655723.m3u8
+Doubt Session - 6:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/760386-1714201816/hls-33cb10/720p/master-8648313.052818269.m3u8
+7. Doubt Session - 7:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/806038-1715410516/hls-7ca0d5/720p/master-1343752.607901112.m3u8
+8. Doubt Session - 8:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/828315-1716015146/hls-dcd741/720p/master-5211357.480720855.m3u8
+9. Doubt Session - 9:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/979072-1720253561/hls-4c242a/720p/master-7945012.382356111.m3u8
+10. Doubt Session - 10:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1044778-1722064406/hls-0cab78/720p/master-1771868.0809303743.m3u8
+Doubt Session - 11:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1088401-1723274376/hls-d8681d/720p/master-6538015.127622981.m3u8
+11. Doubt Session - 11:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1089548-1723289691/hls-89fdbc/720p/master-1637875.3548068148.m3u8
+12. Doubt Session - 12:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1108013-1723877010/hls-279bf1/720p/master-8739540.168361524.m3u8
+12. Doubt Session - 12:https://appxcontent-mcdn.akamai.net.in/mobilebucket//browserlive-pdf/1723872556927-Doubt16aug.pdf
+13. Doubt Class - 13:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1147745-1725087689/hls-f3ad11/720p/master-8916004.511335958.m3u8
+15. Doubt Class - 15:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1310476-1729320770/hls-cd6cb2/720p/master-167842.27929066418.m3u8
+17. Doubt Class - 17:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1422720-1732346098/hls-ee6e5f/720p/master-8208693.455024513.m3u8
+Doubt Class - 18:https://transcoded-videos.classx.co.in/videos/uclive-data/1797867-1741418549/hls-42a912/720p/master-3721695.793817055.m3u8?edge-cache-token=URLPrefix=aHR0cHM6Ly90cmFuc2NvZGVkLXZpZGVvcy5jbGFzc3guY28uaW4vdmlkZW9zL3VjbGl2ZS1kYXRhLzE3OTc4NjctMTc0MTQxODU0OS9obHMtNDJhOTEy~Expires=1750508967~Signature=2-LkTu31PtyIgEYXaYR9tmaRFNapD0T7wUHBqXYCficqbLpL-a3exbC5j9ohKnTz-tDoHwIfFiLxSL3WqMoKDA
+Phrasal Verb Part - 1:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/328000-1704873367/hls-8900a9/720p/master-4530525.910912269.m3u8
+Phrasal Verb Part - 2:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/328368-1704887268/hls-68caf3/720p/master-612365.7649322189.m3u8
+Phrasal Verb lesson:https://appxcontent-mcdn.akamai.net.in/paid_course4/2024-01-10-0.2892939852754097.pdf
+Phrasal Verb Practice:https://appxcontent-mcdn.akamai.net.in/paid_course4/2024-01-10-0.6403702509382063.pdf
+Top 100 Preposition:https://appxcontent.kaxa.in/paid_course4/2024-09-12-0.03262488618038484.pdf
+`;
+
+let mode="video", hls;
+const list=document.getElementById("list");
+const viewer=document.getElementById("viewer");
+
+const parsed=RAW_DATA.trim().split("\n").map(l=>{
+  const i=l.indexOf(":");
+  return{
+    title:l.slice(0,i),
+    url:l.slice(i+1),
+    type:l.includes(".pdf")?"pdf":"video"
+  };
+});
+
+videoTab.onclick=()=>{mode="video";render()};
+pdfTab.onclick=()=>{mode="pdf";render()};
+
+function render(){
+  videoTab.classList.toggle("active",mode==="video");
+  pdfTab.classList.toggle("active",mode==="pdf");
+  list.innerHTML="";
+  parsed.filter(x=>x.type===mode).forEach(i=>{
+    const d=document.createElement("div");
+    d.className="card";
+    d.innerHTML=`${i.title}<button class="play-btn">${mode==="video"?"▶ Play":"Open"}</button>`;
+    d.querySelector("button").onclick=()=>openItem(i);
+    list.appendChild(d);
+  });
+}
+
+function openItem(i){
+  viewer.innerHTML="";
+  if(i.type==="video"){
+    viewer.innerHTML=`
+      <select id="quality"></select>
+      <video id="player" controls controlsList="nodownload"></video>
+    `;
+    const v=document.getElementById("player");
+
+    // ✅ RESUME
+    let last=localStorage.getItem(i.url);
+    v.onloadedmetadata=()=>{if(last)v.currentTime=last};
+    v.ontimeupdate=()=>localStorage.setItem(i.url,v.currentTime);
+
+    // ✅ M3U8 PLAYER
+    if(Hls.isSupported()){
+      hls=new Hls();
+      hls.loadSource(i.url);
+      hls.attachMedia(v);
+      hls.on(Hls.Events.MANIFEST_PARSED,(_,d)=>{
+        quality.innerHTML='<option value="-1">Auto</option>';
+        d.levels.forEach((l,i)=>{
+          quality.innerHTML+=`<option value="${i}">${l.height}p</option>`;
+        });
+        quality.onchange=e=>hls.currentLevel=parseInt(e.target.value);
+      });
+    } else v.src=i.url;
+  }
+  else{
+    // ✅ BEST PDF VIEWER
+    viewer.innerHTML=`
+      <div class="pdf-controls">
+        <button class="ctrl" onclick="prev()">◀</button>
+        <button class="ctrl" onclick="next()">▶</button>
+        <button class="ctrl" onclick="zoomIn()">＋</button>
+        <button class="ctrl" onclick="zoomOut()">－</button>
+        <span id="pageInfo"></span>
+      </div>
+      <canvas id="pdf"></canvas>
+    `;
+    loadPDF(i.url);
+  }
+}
+
+/* ✅ PDF ENGINE */
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+let pdfDoc,page=1,scale=1.3,canvas,ctx;
+
+function loadPDF(url){
+  pdfjsLib.getDocument(url).promise.then(pdf=>{
+    pdfDoc=pdf;
+    page=1;
+    renderPage();
+  });
+}
+function renderPage(){
+  pdfDoc.getPage(page).then(p=>{
+    const viewport=p.getViewport({scale});
+    canvas=document.getElementById("pdf");
+    ctx=canvas.getContext("2d");
+    canvas.height=viewport.height;
+    canvas.width=viewport.width;
+    p.render({canvasContext:ctx,viewport});
+    pageInfo.textContent=`Page ${page}/${pdfDoc.numPages}`;
+  });
+}
+function next(){if(page<pdfDoc.numPages){page++;renderPage()}}
+function prev(){if(page>1){page--;renderPage()}}
+function zoomIn(){scale+=0.1;renderPage()}
+function zoomOut(){scale=Math.max(0.6,scale-0.1);renderPage()}
+
+render();
+</script>
+
+</body>
+</html>

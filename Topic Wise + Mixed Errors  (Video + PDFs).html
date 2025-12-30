@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Premium Video & PDF Panel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- ✅ HLS PLAYER -->
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+
+<!-- ✅ PDF.JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+<style>
+:root{
+  --bg:#040615;
+  --panel:#0c1230;
+  --card:#121a4d;
+  --accent:#4f8bff;
+  --text:#eef1ff;
+}
+*{box-sizing:border-box;font-family:system-ui}
+body{
+  margin:0;
+  background:linear-gradient(180deg,#050716,#071035);
+  color:var(--text);
+}
+header{padding:16px;font-size:22px;font-weight:700}
+.tabs{display:flex;gap:10px;padding:10px}
+.tab{
+  padding:10px 18px;
+  border-radius:20px;
+  background:#12194a;
+  opacity:.6;
+  cursor:pointer;
+}
+.tab.active{background:var(--accent);opacity:1}
+.main{
+  display:grid;
+  grid-template-columns:340px 1fr;
+  height:calc(100vh - 120px);
+}
+.sidebar{
+  background:var(--panel);
+  padding:10px;
+  overflow:auto;
+}
+.card{
+  background:var(--card);
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.play-btn{
+  background:var(--accent);
+  border:none;
+  color:#fff;
+  padding:6px 14px;
+  border-radius:20px;
+  cursor:pointer;
+}
+.viewer{
+  padding:14px;
+  position:relative;
+}
+video{
+  width:100%;
+  height:72vh;
+  background:black;
+  border-radius:16px;
+}
+#quality{
+  position:absolute;
+  top:18px;
+  right:20px;
+  background:#000000aa;
+  color:white;
+  border-radius:8px;
+  padding:6px;
+}
+canvas{width:100%;border-radius:14px;background:#000}
+.pdf-controls{
+  display:flex;
+  gap:10px;
+  margin-bottom:8px;
+}
+button.ctrl{
+  background:#ffffff22;
+  border:none;
+  color:white;
+  padding:6px 12px;
+  border-radius:10px;
+  cursor:pointer;
+}
+@media(max-width:900px){
+  .main{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body oncontextmenu="return false">
+
+<header>🎓 Premium Learning Panel</header>
+
+<div class="tabs">
+  <div class="tab active" id="videoTab">🎬 Videos</div>
+  <div class="tab" id="pdfTab">📄 PDFs</div>
+</div>
+
+<div class="main">
+  <div class="sidebar" id="list"></div>
+  <div class="viewer" id="viewer">Select content</div>
+</div>
+
+<script>
+// ✅ PASTE DATA (Title:URL)
+const RAW_DATA = `
+1. Parts Of Speech:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1105150-1723791339/hls-1e81fe/720p/master-2162660.7082297066.m3u8
+2. Subject Verb Agreement:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1105846-1723801627/hls-e08961/720p/master-7334208.064358101.m3u8
+3. Noun:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106153-1723805732/hls-21721b/720p/master-5595979.323286939.m3u8
+4. Pronoun:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106162-1723805910/hls-2ac560/720p/master-1705352.9899442198.m3u8
+5. Verb:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106169-1723806084/hls-0c8198/720p/master-7837726.202622013.m3u8
+6. Adverb:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106189-1723806627/hls-d100a0/720p/master-2959975.9805464232.m3u8
+7. Adjective:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106194-1723806809/hls-341e11/720p/master-4925461.583335486.m3u8
+8. Article:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106205-1723806991/hls-1142d2/720p/master-3001659.094160838.m3u8
+9. Tense:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106213-1723807169/hls-42725e/720p/master-5473447.270026639.m3u8
+10. Preposition:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106218-1723807181/hls-01e3ea/720p/master-4987603.594536771.m3u8
+11. Conjunction:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106221-1723807345/hls-93a35c/720p/master-4283274.378553614.m3u8
+12. Question Tag:https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1106228-1723807528/hls-a477ff/720p/master-8661572.359009206.m3u8
+Spotting Errors Youtube (Answer in Red) PDFs - 1:https://appxcontent-mcdn.akamai.net.in/subject/2024-08-16-0.6247236459885988.pdf
+Spotting Errors Youtube (Answer in Red) PDFs - 1:https://appxcontent-mcdn.akamai.net.in/paid_course4/2024-08-17-0.3051842217015399.pdf
+Spotting Error Youtube (Without Answer in Red) - 1:https://appxcontent.kaxa.in/paid_course4/2024-11-09-0.020970723967632.pdf
+Spotting Errors Answer - 1:https://appxcontent.kaxa.in/paid_course4/2024-11-09-0.604056857271734.pdf
+Spotting Error Youtube (Without Answer in Red) - 2:https://appxcontent.kaxa.in/paid_course4/2024-11-09-0.26151961098817655.pdf
+Spotting Errors answer - 2:https://appxcontent.kaxa.in/paid_course4/2024-11-09-0.12748439375876086.pdf
+OMR:https://appxcontent.kaxa.in/paid_course4/2024-11-09-0.5597143209019995.pdf
+Spotting Errors Updated 24 April 2025:https://appx-content-v2.classx.co.in/paid_course4/2025-04-24-0.5364292787171635.pdf
+Spotting Errors Answer updated:https://appx-content-v2.classx.co.in/paid_course4/2025-04-24-0.6628243446607199.pdf
+Spotting Errors OMR:https://appxcontent.kaxa.in/paid_course4/2024-11-06-0.17657436578082342.pdf
+`;
+
+let mode="video", hls;
+const list=document.getElementById("list");
+const viewer=document.getElementById("viewer");
+
+const parsed=RAW_DATA.trim().split("\n").map(l=>{
+  const i=l.indexOf(":");
+  return{
+    title:l.slice(0,i),
+    url:l.slice(i+1),
+    type:l.includes(".pdf")?"pdf":"video"
+  };
+});
+
+videoTab.onclick=()=>{mode="video";render()};
+pdfTab.onclick=()=>{mode="pdf";render()};
+
+function render(){
+  videoTab.classList.toggle("active",mode==="video");
+  pdfTab.classList.toggle("active",mode==="pdf");
+  list.innerHTML="";
+  parsed.filter(x=>x.type===mode).forEach(i=>{
+    const d=document.createElement("div");
+    d.className="card";
+    d.innerHTML=`${i.title}<button class="play-btn">${mode==="video"?"▶ Play":"Open"}</button>`;
+    d.querySelector("button").onclick=()=>openItem(i);
+    list.appendChild(d);
+  });
+}
+
+function openItem(i){
+  viewer.innerHTML="";
+  if(i.type==="video"){
+    viewer.innerHTML=`
+      <select id="quality"></select>
+      <video id="player" controls controlsList="nodownload"></video>
+    `;
+    const v=document.getElementById("player");
+
+    // ✅ RESUME
+    let last=localStorage.getItem(i.url);
+    v.onloadedmetadata=()=>{if(last)v.currentTime=last};
+    v.ontimeupdate=()=>localStorage.setItem(i.url,v.currentTime);
+
+    // ✅ M3U8 PLAYER
+    if(Hls.isSupported()){
+      hls=new Hls();
+      hls.loadSource(i.url);
+      hls.attachMedia(v);
+      hls.on(Hls.Events.MANIFEST_PARSED,(_,d)=>{
+        quality.innerHTML='<option value="-1">Auto</option>';
+        d.levels.forEach((l,i)=>{
+          quality.innerHTML+=`<option value="${i}">${l.height}p</option>`;
+        });
+        quality.onchange=e=>hls.currentLevel=parseInt(e.target.value);
+      });
+    } else v.src=i.url;
+  }
+  else{
+    // ✅ BEST PDF VIEWER
+    viewer.innerHTML=`
+      <div class="pdf-controls">
+        <button class="ctrl" onclick="prev()">◀</button>
+        <button class="ctrl" onclick="next()">▶</button>
+        <button class="ctrl" onclick="zoomIn()">＋</button>
+        <button class="ctrl" onclick="zoomOut()">－</button>
+        <span id="pageInfo"></span>
+      </div>
+      <canvas id="pdf"></canvas>
+    `;
+    loadPDF(i.url);
+  }
+}
+
+/* ✅ PDF ENGINE */
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+let pdfDoc,page=1,scale=1.3,canvas,ctx;
+
+function loadPDF(url){
+  pdfjsLib.getDocument(url).promise.then(pdf=>{
+    pdfDoc=pdf;
+    page=1;
+    renderPage();
+  });
+}
+function renderPage(){
+  pdfDoc.getPage(page).then(p=>{
+    const viewport=p.getViewport({scale});
+    canvas=document.getElementById("pdf");
+    ctx=canvas.getContext("2d");
+    canvas.height=viewport.height;
+    canvas.width=viewport.width;
+    p.render({canvasContext:ctx,viewport});
+    pageInfo.textContent=`Page ${page}/${pdfDoc.numPages}`;
+  });
+}
+function next(){if(page<pdfDoc.numPages){page++;renderPage()}}
+function prev(){if(page>1){page--;renderPage()}}
+function zoomIn(){scale+=0.1;renderPage()}
+function zoomOut(){scale=Math.max(0.6,scale-0.1);renderPage()}
+
+render();
+</script>
+
+</body>
+</html>

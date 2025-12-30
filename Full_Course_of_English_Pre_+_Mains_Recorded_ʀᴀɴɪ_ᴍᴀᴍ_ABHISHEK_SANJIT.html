@@ -1,0 +1,684 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> INTENSE MATHS MANIA (ABHISHEK SANJIT)</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: orchid;
+            color: black;
+            padding: 20px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .subheading {
+            font-size: 16px;
+            margin-top: 10px;
+            color: black;
+            font-weight: normal;
+        }
+
+        .subheading a {
+            color: darkblue;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        #video-player {
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: #1c1c1c;
+            padding: 10px;
+        }
+
+        #url-input-container {
+            display: none;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        #url-input-container input {
+            width: 70%;
+            padding: 10px;
+            border: 2px solid paleturquoise;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        #url-input-container button {
+            width: 25%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            background: #blac;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        #url-input-container button:hover {
+            background: violet;
+        }
+
+        .search-bar {
+            margin: 20px auto;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .no-results {
+            color: aquamarine;
+            font-weight: bold;
+            margin-top: 20px;
+            text-align: center;
+            display: none;
+        }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            background: purple;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 0 5px;
+        }
+
+        .tab:hover {
+            background: black;
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .content {
+            display: none;
+            margin: 20px auto;
+            width: 90%;
+            max-width: 800px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .content h2 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: black;
+        }
+
+        .video-list, .pdf-list, .other-list {
+            text-align: left;
+        }
+
+        .video-list a, .pdf-list a, .other-list a {
+            display: block;
+            padding: 10px;
+            background: #f5f7fa;
+            margin: 5px 0;
+            border-radius: 5px;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .video-list a:hover, .pdf-list a:hover, .other-list a:hover {
+            background: black;
+            color: white;
+            transform: translateX(10px);
+        }
+
+        .footer {
+            margin-top: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 15px;
+            background: #1c1c1c;
+            color: white;
+            text-align: center;
+            border-radius: 10px;
+        }
+
+        .footer a {
+            color: black;
+            text-decoration: none;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    
+        <!DOCTYPE html><html><head><meta charset='utf-8'><title>FOUNDATION_BATCH_(COMPLETE_ENGLISH)</title>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'/>
+  <style>
+    body { background: #white; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 20px; overflow-x: hidden; }
+    .player-box { max-width: 900px; margin: auto; text-align: center; }
+    video { width: 100%; border-radius: 12px; box-shadow: 0 0 15px black; }
+    #videoTitle { font-size: 20px; font-weight: bold; color: black; margin: 10px 0 30px; }
+    .tabs { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+    .tab-button { padding: 12px 20px; font-size: 16px; background: rgba(255,255,255,0.05); color: #blue; border: 1px solid #444; border-radius: 8px; cursor: pointer; font-weight: bold; transition: all 0.3s; }
+    .tab-button:hover { background: #red; color: lawngreen; }
+    .tab-button.active { background: linear-gradient(135deg, orangered, darkred); color: #darkorange; box-shadow: 0 0 12px #red; }
+    .video { background: lightblue; padding: 14px 18px; border-radius: 10px; font-size: 19px; font-weight: 500; transition: 0.3s ease; border-left: 4px solid black; margin-bottom: 12px; }
+    .video:hover { transform: translateX(6px); background: darkorange; box-shadow: 0 0 10px black; }
+    a { color: inherit; text-decoration: none; }
+    .footer { text-align: center; margin-top: 30px; font-size: 13px; color: #888; }
+    .footer a { color: black; }
+  </style>
+</head><body>
+  <div class="player-box"><video id="player" controls autoplay playsinline>
+    <source src="" type="application/x-mpegURL">Your browser does not support the video tag.
+  </video><div id="videoTitle"></div></div>
+  <div class="tabs">
+    <button class="tab-button" onclick="showTab('video')">📺 video</button>
+    <button class="tab-button" onclick="showTab('pdf')">📄 pdf</button>
+    <button class="tab-button" onclick="showTab('other')">🧩 other</button>
+  </div><!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Full Course Of English (Pre + Mains) Recorded </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg-color: #121212;
+      --text-color: #f0f0f0;
+      --primary-color: #00bfff;
+      --secondary-color: #ff9800;
+      --success-color: #00ff99;
+      --warning-color: #ffc107;
+      --card-bg: #1e1e1e;
+      --section-bg: #1f1f1f;
+      --link-color: #00bfff;
+      --pdf-color: #ffc107;
+      --button-text: #ffffff;
+    }
+    
+    [data-theme="light"] {
+      --bg-color: #f8f9fa;
+      --text-color: #333333;
+      --primary-color: #0066cc;
+      --secondary-color: #e67e22;
+      --success-color: #27ae60;
+      --warning-color: #f39c12;
+      --card-bg: #ffffff;
+      --section-bg: #e9ecef;
+      --link-color: #0066cc;
+      --pdf-color: #e67e22;
+      --button-text: #333333;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      padding: 15px;
+      margin: 0;
+      transition: all 0.3s ease;
+      line-height: 1.5;
+    }
+    
+    h1 {
+      color: var(--primary-color);
+      text-align: center;
+      border-bottom: 2px solid var(--primary-color);
+      padding-bottom: 8px;
+      font-size: 1.5em;
+      margin: 15px 0;
+    }
+    
+    .meta-info {
+      text-align: center;
+      color: var(--text-color);
+      opacity: 0.8;
+      margin-bottom: 15px;
+      font-size: 0.85em;
+    }
+    
+    .section-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      font-size: 1em;
+      text-align: center;
+      color: var(--button-text);
+      background-color: var(--section-bg);
+      border: 1px solid var(--primary-color);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    .section-button:hover {
+      background-color: var(--primary-color);
+      color: white;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    
+    .section {
+      display: none;
+      margin-bottom: 15px;
+    }
+    
+    .topic-button {
+      background-color: var(--section-bg);
+      border-color: var(--secondary-color);
+      margin: 4px 0;
+    }
+    
+    .topic-button:hover {
+      background-color: var(--secondary-color);
+    }
+    
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    li {
+      background-color: var(--card-bg);
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 4px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      font-size: 0.95em;
+      transition: all 0.2s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    li:hover {
+      transform: translateX(2px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+    
+    .number {
+      font-weight: bold;
+      color: var(--secondary-color);
+      margin-right: 8px;
+      min-width: 20px;
+    }
+    
+    .link-title {
+      color: var(--link-color);
+      text-decoration: none;
+      flex-grow: 1;
+      word-break: break-word;
+    }
+    
+    .link-title:hover {
+      text-decoration: underline;
+    }
+    
+    .pdf-title {
+      color: var(--pdf-color);
+    }
+    
+    .file-info {
+      background-color: var(--section-bg);
+      padding: 8px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 0.85em;
+    }
+    
+    .controls {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 15px;
+    }
+    
+    .theme-toggle {
+      padding: 6px 12px;
+      background-color: var(--section-bg);
+      border: 1px solid var(--primary-color);
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--button-text);
+      font-size: 0.9em;
+    }
+    
+    .theme-toggle:hover {
+      background-color: var(--primary-color);
+      color: white;
+    }
+    
+    footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.8em;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+    
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      
+      .controls {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .theme-toggle {
+        width: 100%;
+        margin-bottom: 8px;
+      }
+      
+      li {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .number {
+        margin-bottom: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+<h1>ʀᴀɴɪ ᴍᴀᴍ Full Course Of English (Pre + Mains) Recorded </h1>
+<
+  <div>IST: 2025-09-06 at 16:14:06</div>
+</div>
+
+
+<div class="controls">
+  <button class="theme-toggle" onclick="toggleTheme()">Toggle Dark/Light Mode</button>
+</div><button class='section-button' onclick="toggleSection('classes')">Classes (61)</button>
+<div id='classes' class='section'><ul><li>
+                      <span class='number'>1.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1227600-1727246276/hls-173a76/720p/master-348207.56639837305.m3u8' class='link-title' target='_blank'>1. Parts Of Speech - 1</a>
+                    </li><li>
+                      <span class='number'>2.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1235779-1727416528/hls-9be1da/720p/master-9495341.865846748.m3u8' class='link-title' target='_blank'>3. Parts Of Speech - 3</a>
+                    </li><li>
+                      <span class='number'>3.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1247077-1727761778/hls-3f4b1a/720p/master-232386.27331878536.m3u8' class='link-title' target='_blank'>5. Conjunction - 2</a>
+                    </li><li>
+                      <span class='number'>4.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1254845-1727934755/hls-eba7fd/720p/master-4958788.156290821.m3u8' class='link-title' target='_blank'>6. Conjunction - 3</a>
+                    </li><li>
+                      <span class='number'>5.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1258730-1728020972/hls-c5b337/720p/master-1379166.2588736764.m3u8' class='link-title' target='_blank'>7. Conjunction - 4</a>
+                    </li><li>
+                      <span class='number'>6.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1267394-1728280533/hls-b9074f/720p/master-728456.6595270969.m3u8' class='link-title' target='_blank'>8. Conjunction - 5</a>
+                    </li><li>
+                      <span class='number'>7.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1271746-1728367291/hls-b7444c/720p/master-2980921.363284459.m3u8' class='link-title' target='_blank'>9. Conjunction - 6</a>
+                    </li><li>
+                      <span class='number'>8.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1288614-1728885154/hls-9eb106/720p/master-26848.444091958077.m3u8' class='link-title' target='_blank'>12. Verb - 3</a>
+                    </li><li>
+                      <span class='number'>9.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1300923-1729144002/hls-fdb9b3/720p/master-9142741.557290647.m3u8' class='link-title' target='_blank'>15. Verb - 6</a>
+                    </li><li>
+                      <span class='number'>10.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1305476-1729230941/hls-4df38d/720p/master-8223873.797157924.m3u8' class='link-title' target='_blank'>16. Verb - 7</a>
+                    </li><li>
+                      <span class='number'>11.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1315716-1729491043/hls-5ae9c6/720p/master-2964767.0499036117.m3u8' class='link-title' target='_blank'>17. Verb - 8</a>
+                    </li><li>
+                      <span class='number'>12.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1320545-1729576360/hls-7605b8/720p/master-3831800.232397642.m3u8' class='link-title' target='_blank'>18. Verb - 9</a>
+                    </li><li>
+                      <span class='number'>13.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1329789-1729748984/hls-b13229/720p/master-4494271.524091318.m3u8' class='link-title' target='_blank'>20. Verb - 11</a>
+                    </li><li>
+                      <span class='number'>14.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1334719-1729836654/hls-a141ad/720p/master-5272170.882433263.m3u8' class='link-title' target='_blank'>21. Verb -12</a>
+                    </li><li>
+                      <span class='number'>15.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1345278-1730094582/hls-bc0862/720p/master-6240780.190867312.m3u8' class='link-title' target='_blank'>22. Verb - 13</a>
+                    </li><li>
+                      <span class='number'>16.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1347995-1730182059/hls-9f70af/720p/master-6208071.526113146.m3u8' class='link-title' target='_blank'>23. Verb - 14</a>
+                    </li><li>
+                      <span class='number'>17.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1350288-1730267916/hls-70e0fb/720p/master-9120766.868353195.m3u8' class='link-title' target='_blank'>24. Verb - 15</a>
+                    </li><li>
+                      <span class='number'>18.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1376829-1731304005/hls-3d1dc7/720p/master-8140111.292711014.m3u8' class='link-title' target='_blank'>25. Subject - Verb - Agreement - 1</a>
+                    </li><li>
+                      <span class='number'>19.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1392750-1731649603/hls-5c4a0f/720p/master-4188467.934588056.m3u8' class='link-title' target='_blank'>29. Subject - Verb - Agreement -5</a>
+                    </li><li>
+                      <span class='number'>20.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1402072-1731908817/hls-4a27f1/720p/master-2445539.2011163933.m3u8' class='link-title' target='_blank'>30. Subject - Verb - Agreement -6</a>
+                    </li><li>
+                      <span class='number'>21.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1406176-1731994855/hls-7081dd/720p/master-1545636.4873782413.m3u8' class='link-title' target='_blank'>31. Tense - 1</a>
+                    </li><li>
+                      <span class='number'>22.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1414455-1732168193/hls-0d6cfa/720p/master-3128280.097322895.m3u8' class='link-title' target='_blank'>34. Tense - 3</a>
+                    </li><li>
+                      <span class='number'>23.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1418399-1732254406/hls-0c184b/720p/master-6630769.632561464.m3u8' class='link-title' target='_blank'>35. Tense - 4</a>
+                    </li><li>
+                      <span class='number'>24.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1426763-1732513681/hls-2bc4ea/720p/master-7575578.742853972.m3u8' class='link-title' target='_blank'>36. Test</a>
+                    </li><li>
+                      <span class='number'>25.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1455630-1733204715/hls-c3361f/720p/master-3741984.7625536607.m3u8' class='link-title' target='_blank'>43. Voice - 3</a>
+                    </li><li>
+                      <span class='number'>26.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1459523-1733291290/hls-f58607/720p/master-2302660.631829994.m3u8' class='link-title' target='_blank'>44. Voice - 4</a>
+                    </li><li>
+                      <span class='number'>27.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1467833-1733465349/hls-d358d1/720p/master-2197518.8044773587.m3u8' class='link-title' target='_blank'>46. Question Tag - 2</a>
+                    </li><li>
+                      <span class='number'>28.</span> 
+                      <a href='https://transcoded-videos.classx.co.in/videos/uclive-data/1533598-1735019469/hls-a16384/720p/master-9290133.742634993.m3u8?edge-cache-token=URLPrefix=aHR0cHM6Ly90cmFuc2NvZGVkLXZpZGVvcy5jbGFzc3guY28uaW4vdmlkZW9zL3VjbGl2ZS1kYXRhLzE1MzM1OTgtMTczNTAxOTQ2OS9obHMtYTE2Mzg0~Expires=1757157212~Signature=G4fx7uVicMNw5qV_StKCJJecr9jXIFDWeW8msmuZtvkGxrlEeh2D7zqvNmzQ6wuCDnEPvDpzpJUmCHrbA0VrDw' class='link-title' target='_blank'>50. Narration - 4</a>
+                    </li><li>
+                      <span class='number'>29.</span> 
+                      <a href='https://transcoded-videos.classx.co.in/videos/uclive-data/1570015-1735882744/hls-855312/720p/master-1836926.9606735571.m3u8?edge-cache-token=URLPrefix=aHR0cHM6Ly90cmFuc2NvZGVkLXZpZGVvcy5jbGFzc3guY28uaW4vdmlkZW9zL3VjbGl2ZS1kYXRhLzE1NzAwMTUtMTczNTg4Mjc0NC9obHMtODU1MzEy~Expires=1757157212~Signature=j4DkNCn3jLDFqjN1vI1q7w7WafDVzIXmnb9A_s6nu2wFb501wUhitSFRbTWWY51qvyAjj0IBLY3uNRkvoHiSAg' class='link-title' target='_blank'>56. Preposition - 5</a>
+                    </li><li>
+                      <span class='number'>30.</span> 
+                      <a href='https://transcoded-videos.classx.co.in/videos/uclive-data/1574368-1735970848/hls-ea5c35/720p/master-6796606.972757386.m3u8?edge-cache-token=URLPrefix=aHR0cHM6Ly90cmFuc2NvZGVkLXZpZGVvcy5jbGFzc3guY28uaW4vdmlkZW9zL3VjbGl2ZS1kYXRhLzE1NzQzNjgtMTczNTk3MDg0OC9obHMtZWE1YzM1~Expires=1757157212~Signature=OfSeVg_mVJqDDO3mYmqytuUVfOdKV3qwHtHVFNnLCriOE_tQEYtbf8IDYZfKVC6okIOuUptGkzfYHQeqU3JLAw' class='link-title' target='_blank'>57. Preposition - 6</a>
+                    </li><li>
+                      <span class='number'>31.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=8533'' class='link-title' target='_blank'>Error fetching folder contents for folder 8533. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>32.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=7740'' class='link-title' target='_blank'>Error fetching folder contents for folder 7740. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>33.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=7792'' class='link-title' target='_blank'>Error fetching folder contents for folder 7792. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>34.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=7787'' class='link-title' target='_blank'>Error fetching folder contents for folder 7787. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>35.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=7728'' class='link-title' target='_blank'>Error fetching folder contents for folder 7728. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>36.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=7796'' class='link-title' target='_blank'>Error fetching folder contents for folder 7796. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>37.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=13976'' class='link-title' target='_blank'>Error fetching folder contents for folder 13976. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>38.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=13870'' class='link-title' target='_blank'>Error fetching folder contents for folder 13870. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>39.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=13871'' class='link-title' target='_blank'>Error fetching folder contents for folder 13871. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>40.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=14128'' class='link-title' target='_blank'>Error fetching folder contents for folder 14128. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>41.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=14129'' class='link-title' target='_blank'>Error fetching folder contents for folder 14129. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>42.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=14130'' class='link-title' target='_blank'>Error fetching folder contents for folder 14130. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>43.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=14131'' class='link-title' target='_blank'>Error fetching folder contents for folder 14131. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>44.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=14294'' class='link-title' target='_blank'>Error fetching folder contents for folder 14294. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>45.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=14305'' class='link-title' target='_blank'>Error fetching folder contents for folder 14305. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>46.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=14455'' class='link-title' target='_blank'>Error fetching folder contents for folder 14455. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>47.</span> 
+                      <a href='https://ucliveapi.classx.co.in/get/folder_contentsv2?course_id=50&parent_id=14456'' class='link-title' target='_blank'>Error fetching folder contents for folder 14456. Error: 403, message='Attempt to decode JSON with unexpected mimetype: text/html; charset=utf-8', url='</a>
+                    </li><li>
+                      <span class='number'>48.</span> 
+                      <a href='https://t.me/+cfOvzA7VeWk0Y2Jl' class='link-title' target='_blank'>Telegram Group for Paid Students</a>
+                    </li><li>
+                      <span class='number'>49.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/363397-1709362851/hls-61ab7c/720p/master-3847441.3478519456.m3u8' class='link-title' target='_blank'>Doubt Session - 1</a>
+                    </li><li>
+                      <span class='number'>50.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/367292-1709967758/hls-73d64f/720p/master-5322425.965223812.m3u8' class='link-title' target='_blank'>Doubt Session - 2</a>
+                    </li><li>
+                      <span class='number'>51.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/680215-1711783334/hls-f1cc43/720p/master-7069673.414104816.m3u8' class='link-title' target='_blank'>Doubt Session - 3</a>
+                    </li><li>
+                      <span class='number'>52.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/701626-1712386330/hls-6f74f7/720p/master-493136.5165800017.m3u8' class='link-title' target='_blank'>4. Doubt Session - 4</a>
+                    </li><li>
+                      <span class='number'>53.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/721699-1712992036/hls-75c916/720p/master-2067866.647655723.m3u8' class='link-title' target='_blank'>Doubt Session - 5</a>
+                    </li><li>
+                      <span class='number'>54.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/806038-1715410516/hls-7ca0d5/720p/master-1343752.607901112.m3u8' class='link-title' target='_blank'>7. Doubt Session - 7</a>
+                    </li><li>
+                      <span class='number'>55.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/828315-1716015146/hls-dcd741/720p/master-5211357.480720855.m3u8' class='link-title' target='_blank'>8. Doubt Session - 8</a>
+                    </li><li>
+                      <span class='number'>56.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/979072-1720253561/hls-4c242a/720p/master-7945012.382356111.m3u8' class='link-title' target='_blank'>9. Doubt Session - 9</a>
+                    </li><li>
+                      <span class='number'>57.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1044778-1722064406/hls-0cab78/720p/master-1771868.0809303743.m3u8' class='link-title' target='_blank'>10. Doubt Session - 10</a>
+                    </li><li>
+                      <span class='number'>58.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1089548-1723289691/hls-89fdbc/720p/master-1637875.3548068148.m3u8' class='link-title' target='_blank'>12. Doubt Session - 12</a>
+                    </li><li>
+                      <span class='number'>59.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1147745-1725087689/hls-f3ad11/720p/master-8916004.511335958.m3u8' class='link-title' target='_blank'>14. Doubt Class - 14</a>
+                    </li><li>
+                      <span class='number'>60.</span> 
+                      <a href='https://appx-transcoded-videos-mcdn.akamai.net.in/videos/uclive-data/1422720-1732346098/hls-ee6e5f/720p/master-8208693.455024513.m3u8' class='link-title' target='_blank'>17. Doubt Class - 17</a>
+                    </li><li>
+                      <span class='number'>61.</span> 
+                      <a href='https://transcoded-videos.classx.co.in/videos/uclive-data/1797867-1741418549/hls-42a912/720p/master-3721695.793817055.m3u8?edge-cache-token=URLPrefix=aHR0cHM6Ly90cmFuc2NvZGVkLXZpZGVvcy5jbGFzc3guY28uaW4vdmlkZW9zL3VjbGl2ZS1kYXRhLzE3OTc4NjctMTc0MTQxODU0OS9obHMtNDJhOTEy~Expires=1757157211~Signature=VJB_ijniuCTsya41MRzK3SQdODyJY1DBzLKjo6pdCRCcpEB8FeKk6yWrvvdb_8tFUavXQXpj0GAzllATKxYgBA' class='link-title' target='_blank'>Doubt Class - 18</a>
+                    </li></ul></div>
+
+  
+
+<script>
+  // Toggle sections
+  function toggleSection(id) {
+    const section = document.getElementById(id);
+    section.style.display = section.style.display === 'block' ? 'none' : 'block';
+  }
+
+  // Toggle theme
+  function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme');
+    if (currentTheme === 'light') {
+      body.removeAttribute('data-theme');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      body.setAttribute('data-theme', 'light');
+      localStorage.setItem('theme', 'light');
+    }
+  }
+
+  // Apply saved theme preference
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  document.body.setAttribute('data-theme', savedTheme);
+</script>
+</body></html>
+    </div>
+    <script>
+    function playVideo(url, title) {
+      const player = document.getElementById('player');
+      const videoTitle = document.getElementById('videoTitle');
+      player.src = url; videoTitle.textContent = title;
+      window.scrollTo({ top: 0, behavior: 'smooth' }); player.play();
+    }
+    function showTab(tabId) {
+      const tabs = document.querySelectorAll('.tab-content');
+      tabs.forEach(tab => tab.style.display = 'none');
+      document.getElementById(tabId).style.display = 'block';
+      const buttons = document.querySelectorAll('.tab-button');
+      buttons.forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+    document.addEventListener("DOMContentLoaded", () => { showTab('video'); });
+  </script>
+</body></html>
+  <style>
+    .float-name {position: fixed; font-size: 25px; color: black; border: 7px solid black; padding: 12px 10px; background: yellow (1, 2, 3, 0.6); border-radius: 18px; animation: floatName 10s ease-in-out infinite alternate; z-index: 9999; }
+    @keyframes floatName { 0% {top: 20%;} 50% {top: 90%;} 100% {top: 5%;} }
+    .footer { text-align: center; margin-top: 100px; font-size: 15px; color: yellow; font-family: 'Segoe UI', sans-serif; }
+    .footer a { color: gold; text-decoration: none; font-weight: 600; transition: color 0.3s ease; }
+    .footer a:hover { color: white; }
+  </style>
+</head><body>
+  
